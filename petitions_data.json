@@ -15,6 +15,12 @@
         "index": 1,
         "title": "df",
         "description": "sdfsfadfd",
+        "voters": ["sdff", "Sdfsf"]
+    },
+    {
+        "index": 2,
+        "title": "fjsl",
+        "description": "fsd",
         "voters": []
     }
 ]

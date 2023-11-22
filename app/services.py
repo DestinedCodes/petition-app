@@ -1,17 +1,19 @@
+""" This file contains the functions to save and load data from file. """
 import json
 
 
-# Function to save data to file
 def save_data_to_file(petitions_data):
-    with open("petitions_data.json", "w") as file:
+    """ Save the data to file """
+    with open("petitions_data.json", "w", encoding="utf-8") as file:
         json.dump(petitions_data, file)
+    return petitions_data
 
 
-# # Function to load data from file
 def load_data_from_file():
+    """ Load the data from file """
     petitions_data = []
     try:
-        with open("petitions_data.json", "r") as file:
+        with open("petitions_data.json", "r", encoding="utf-8") as file:
             data = json.load(file)
             if isinstance(data, list):
                 petitions_data.extend(data)

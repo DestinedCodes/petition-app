@@ -1,3 +1,5 @@
+""" This module contains the PetitionPage class """
+# pylint: disable=import-error
 from customtkinter import (
     CTkEntry,
     CTkTextbox,
@@ -12,7 +14,9 @@ from .services import save_data_to_file, load_data_from_file
 
 
 class PetitionPage:
+    """ The class for the Petition Page """
     def __init__(self, main_frame):
+        """ Initialize the Petition Page """
         self.petitions_data = load_data_from_file()
 
         self.main_frame = main_frame
@@ -147,6 +151,7 @@ class PetitionPage:
         )
 
     def create_petition(self):
+        """ Create a new petition """
         title = self.title_entry.get()
         description = self.description_entry.get("1.0", "end-1c")
         if title and description:
@@ -161,6 +166,7 @@ class PetitionPage:
             self.error_label.configure(text="Please fill in all the fields")
 
     def update_ongoing_petitions(self):
+        """ Update the ongoing petitions list """
         if self.ongoing_petitions.size() > 0:
             self.ongoing_petitions.delete(0, "end")
         for petition in self.petitions_data:
@@ -171,10 +177,12 @@ class PetitionPage:
                 "end", f"{index}: {petition_title} - Votes: {votes}")
 
     def clear_create_petition_fields(self):
+        """ Clear the create petition fields """
         self.title_entry.delete(0, "end")
         self.description_entry.delete("1.0", "end")
 
     def show_petition(self, selected_petition):
+        """ Show the voting page for the selected petition """
         # Extract the petition title from the selected item
         petition_index = selected_petition.split(":")[0]
 
@@ -182,5 +190,5 @@ class PetitionPage:
         for petition in self.petitions_data:
             if petition["index"] == int(petition_index):
                 # Open the voting page for the selected petition
-                self.voting = VotingPage(self.main_frame, petition)
+                self.main_frame = VotingPage(self.main_frame, petition)
                 break
