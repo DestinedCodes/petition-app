@@ -1,0 +1,20 @@
+[
+    {
+        "index": 0,
+        "title": "dsf",
+        "description": "dsf",
+        "voters": [],
+        "result": [
+            {
+                "for": 5,
+                "against": 12
+            }
+        ]
+    },
+    {
+        "index": 1,
+        "title": "df",
+        "description": "sdfsfadfd",
+        "voters": []
+    }
+]
