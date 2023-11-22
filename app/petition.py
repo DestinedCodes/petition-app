@@ -8,7 +8,7 @@ from customtkinter import (
 )
 from CTkListbox import CTkListbox
 from .voting import VotingPage
-from services import save_data_to_file, load_data_from_file
+from .services import save_data_to_file, load_data_from_file
 
 
 class PetitionPage:
