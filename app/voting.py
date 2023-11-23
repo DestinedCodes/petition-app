@@ -185,7 +185,7 @@ class VotingPage:
             command=self.back_to_dashboard,
         )
         back_to_dashboard_button.pack(padx=10, pady=10)
-        
+
     def update_votes_list(self):
         """ Updates the votes list """
         if self.votes_list.size() > 0:

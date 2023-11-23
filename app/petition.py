@@ -163,7 +163,7 @@ class PetitionPage:
                 "description": description,
                 "voters": [],
                 "votes_for": 0,
-                "votest_against": 0,
+                "votes_against": 0,
             }
             self.petitions_data.append(petition)
             self.update_ongoing_petitions()
