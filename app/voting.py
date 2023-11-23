@@ -17,14 +17,15 @@ class VotingPage:
     def __init__(self, main_frame, petition):
         self.petitions_data = load_data_from_file()
         self.petition = petition
+        self.main_frame = main_frame
 
         # Destroy the existing widgets in the main frame
-        for widget in main_frame.winfo_children():
+        for widget in self.main_frame.winfo_children():
             widget.destroy()
 
         # Create the voting page label
         voting_page_label = CTkLabel(
-            main_frame,
+            self.main_frame,
             text="Vote for/against Petition",
             font=CTkFont(size=30, weight="bold"),
             text_color="black",
@@ -33,7 +34,7 @@ class VotingPage:
 
         # Create the voting frame
         voting_frame = CTkFrame(
-            main_frame,
+            self.main_frame,
             fg_color="#A5D8FF",
             border_width=2,
             border_color="black"
@@ -117,7 +118,7 @@ class VotingPage:
         # Create the vote for button
         vote_for_button = CTkButton(
             voting_frame,
-            text="Vote for",
+            text=f"Vote for ({self.petition['votes_for']})",
             font=CTkFont(size=20, weight="normal"),
             text_color="black",
             fg_color="#B2F2BB",
@@ -132,7 +133,7 @@ class VotingPage:
         # Create the vote against button
         vote_against_button = CTkButton(
             voting_frame,
-            text="Vote against",
+            text=f"Vote against ({self.petition['votes_against']})",
             font=CTkFont(size=20, weight="normal"),
             text_color="black",
             fg_color="#B2F2BB",
@@ -145,7 +146,12 @@ class VotingPage:
 
         # Create a scrollable frame to display the votes
         votes_frame = CTkFrame(
-            main_frame, width=400, height=300, fg_color="#FFEC3C"
+            self.main_frame,
+            width=400,
+            height=300,
+            fg_color="#A5D8FF",
+            border_width=2,
+            border_color="black"
         )
         votes_frame.pack(fill="both", expand=True)
 
@@ -166,7 +172,7 @@ class VotingPage:
             votes_frame,
             width=310,
             height=200,
-            fg_color="#A5D8FF",
+            fg_color="#FFEC3C",
             text_color="black",
             border_width=0,
         )
@@ -175,7 +181,7 @@ class VotingPage:
 
         # Create the back to dashboard button
         back_to_dashboard_button = CTkButton(
-            main_frame,
+            self.main_frame,
             text="Back to Dashboard",
             font=CTkFont(size=20, weight="normal"),
             text_color="black",
@@ -202,6 +208,9 @@ class VotingPage:
         self.petitions_data[self.petition["id"]] = self.petition
         save_data_to_file(self.petitions_data)
         self.update_votes_list()
+        self.votes_for_button.configure(
+            text=f"Vote for ({self.petition['votes_for']})")
+        self.votes_against_button.update()
         self.voters_name_entry.delete(0, "end")
 
     def votes_against(self):
@@ -213,8 +222,14 @@ class VotingPage:
         self.petitions_data[self.petition["id"]] = self.petition
         save_data_to_file(self.petitions_data)
         self.update_votes_list()
+        self.votes_against_button.configure(
+            text=f"Vote against ({self.petition['votes_against']})")
+        self.votes_against_button.update()
         self.voters_name_entry.delete(0, "end")
 
     def back_to_dashboard(self):
         """ Goes back to the dashboard page """
-        pass
+        for widget in self.main_frame.winfo_children():
+            widget.destroy()
+        from .petitions import PetitionPage
+        self.main_frame = PetitionPage(self.main_frame)
