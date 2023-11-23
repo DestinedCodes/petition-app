@@ -171,6 +171,7 @@ class PetitionPage:
             save_data_to_file(self.petitions_data)
         else:
             self.error_label.configure(text="Please fill in all the fields")
+            self.error_label.pack(padx=10, pady=10)
 
     def update_ongoing_petitions(self):
         """Update the ongoing petitions list"""

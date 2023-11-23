@@ -144,6 +144,14 @@ class VotingPage:
         vote_against_button.pack(
             padx=10, pady=10, side="right", fill="x", expand=True)
 
+        # Create the error label
+        self.error_label = CTkLabel(
+            voting_frame,
+            text="",
+            font=CTkFont(size=20, weight="normal"),
+            text_color="red",
+        )
+
         # Create a scrollable frame to display the votes
         votes_frame = CTkFrame(
             self.main_frame,
@@ -192,6 +200,19 @@ class VotingPage:
         )
         back_to_dashboard_button.pack(padx=10, pady=10)
 
+        # Create a button to delete the petition
+        delete_petition_button = CTkButton(
+            self.main_frame,
+            text="Delete Petition",
+            font=CTkFont(size=20, weight="normal"),
+            text_color="black",
+            fg_color="red",
+            border_width=2,
+            border_color="black",
+            command=self.delete_petition,
+        )
+        delete_petition_button.pack(padx=10, pady=10)
+
     def update_votes_list(self):
         """ Updates the votes list """
         if self.votes_list.size() > 0:
@@ -202,6 +223,11 @@ class VotingPage:
     def vote_for(self):
         """ Adds a vote for the petition """
         name = self.voters_name_entry.get()
+        if name == "":
+            self.error_label.configure(text="Please enter your name")
+            self.error_label.pack(padx=10, pady=10)
+            return
+        self.error_label.configure(text="")
 
         self.petition["voters"].append(name)
         self.petition["votes_for"] += 1
@@ -216,6 +242,11 @@ class VotingPage:
     def votes_against(self):
         """ Adds a vote against the petition """
         name = self.voters_name_entry.get()
+        if name == "":
+            self.error_label.configure(text="Please enter your name")
+            self.error_label.pack(padx=10, pady=10)
+            return
+        self.error_label.configure(text="")
 
         self.petition["voters"].append(name)
         self.petition["votes_against"] += 1
@@ -233,3 +264,13 @@ class VotingPage:
             widget.destroy()
         from .petitions import PetitionPage
         self.main_frame = PetitionPage(self.main_frame)
+
+    def delete_petition(self):
+        """ Deletes the petition """
+        del self.petitions_data[self.petition["id"]]
+        # change the value of the id of the petitions after the deleted one
+        for petition in self.petitions_data.values():
+            if petition["id"] > self.petition["id"]:
+                petition["id"] -= 1
+        save_data_to_file(self.petitions_data)
+        self.back_to_dashboard()
