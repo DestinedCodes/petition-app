@@ -1,3 +1,5 @@
+""" This module contains the PetitionPage class """
+# pylint: disable=import-error
 from customtkinter import (
     CTkEntry,
     CTkTextbox,
@@ -5,15 +7,16 @@ from customtkinter import (
     CTkLabel,
     CTkFrame,
     CTkFont,
-    CTkScrollableFrame,
 )
 from CTkListbox import CTkListbox
 from .services import save_data_to_file, load_data_from_file
 
 
 class VotingPage:
+    """ The class for the Voting Page """
     def __init__(self, main_frame, petition):
         self.petitions_data = load_data_from_file()
+        self.petition = petition
 
         # Destroy the existing widgets in the main frame
         for widget in main_frame.winfo_children():
@@ -120,7 +123,7 @@ class VotingPage:
             fg_color="#B2F2BB",
             border_width=2,
             border_color="black",
-            command=lambda: vote(petition, "for"),
+            command=self.vote_for,
         )
 
         vote_for_button.pack(padx=10, pady=10, side="left",
@@ -135,7 +138,7 @@ class VotingPage:
             fg_color="#B2F2BB",
             border_width=2,
             border_color="black",
-            command=lambda: vote(petition, "against"),
+            command=self.votes_against,
         )
         vote_against_button.pack(
             padx=10, pady=10, side="right", fill="x", expand=True)
@@ -168,6 +171,7 @@ class VotingPage:
             border_width=0,
         )
         self.votes_list.pack(padx=10, pady=(0, 10))
+        self.update_votes_list()
 
         # Create the back to dashboard button
         back_to_dashboard_button = CTkButton(
@@ -178,35 +182,39 @@ class VotingPage:
             fg_color="#B2F2BB",
             border_width=2,
             border_color="black",
-            command=back_to_dashboard,
+            command=self.back_to_dashboard,
         )
         back_to_dashboard_button.pack(padx=10, pady=10)
-
-    def vote(self, petition, choice):
-        # Get the voters name
-        voters_name = self.voters_name_entry.get()
-
-        # # Check if the voters name is empty
-        # if voters_name == "":
-        #     messagebox.showerror(
-        #         title="Error", message="Please enter your name to vote"
-        #     )
-        #     return
-
-        # # Check if the voters name is already present in the votes list
-        # if voters_name in petition["votes"]:
-        #     messagebox.showerror(
-        #         title="Error", message="You have already voted for this petition"
-        #     )
-        #     return
-
-        # Add the voters name to the votes list where petition["index"] is the value of "index" of that petiton on the petitions_data list
-        self.petitions_data[petition["index"]]["votes"].append(voters_name)
-
-        # Update the votes list
-        self.votes_list.delete(0, "end")
-        for vote in petition["votes"]:
+        
+    def update_votes_list(self):
+        """ Updates the votes list """
+        if self.votes_list.size() > 0:
+            self.votes_list.delete(0, "end")
+        for vote in self.petition["voters"]:
             self.votes_list.insert("end", vote)
 
-        # Update the petitions data
+    def vote_for(self):
+        """ Adds a vote for the petition """
+        name = self.voters_name_entry.get()
+
+        self.petition["voters"].append(name)
+        self.petition["votes_for"] += 1
+        self.petitions_data[self.petition["id"]] = self.petition
         save_data_to_file(self.petitions_data)
+        self.update_votes_list()
+        self.voters_name_entry.delete(0, "end")
+
+    def votes_against(self):
+        """ Adds a vote against the petition """
+        name = self.voters_name_entry.get()
+
+        self.petition["voters"].append(name)
+        self.petition["votes_against"] += 1
+        self.petitions_data[self.petition["id"]] = self.petition
+        save_data_to_file(self.petitions_data)
+        self.update_votes_list()
+        self.voters_name_entry.delete(0, "end")
+
+    def back_to_dashboard(self):
+        """ Goes back to the dashboard page """
+        pass
